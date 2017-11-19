@@ -40,13 +40,13 @@ window.renderStatistics = function (ctx, names, times) {
     var step = histogramHeight / max; // px;
 
     for (var i = 0; i < times.length; i++) {
-      // if (names[i] === 'Вы') {
-      //   ctx.fillStyle('rgba(255, 0, 0, 1)');
-      // } else {
-      //   ctx.fillStyle = 'rgba(0, 0, 255,' + Math.random().toFixed(1) + ')';
-      // }
+      if (names[i] === 'Вы') {
+        ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+      } else {
+        ctx.fillStyle = 'rgba(0, 0, 255,' + Math.random().toFixed(1) + ')';
+      }
       ctx.fillRect(initialX + indent * i, initialY + (histogramHeight - times[i] * step), barWidth, times[i] * step);
-      ctx.fillStyle('rgba(0, 0, 0, 1)');
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
       ctx.fillText(names[i], initialX + indent * i, initialY + (histogramHeight - times[i] * step) + times[i] * step + 20);
       ctx.fillText(Math.floor(times[i]), initialX + indent * i, initialY + (histogramHeight - times[i] * step) - 10);
     //  ctx.fillText('Худшее время: ' + max.toFixed(2) + 'мс у игрока ' + names[maxIndex], 120, 60);
