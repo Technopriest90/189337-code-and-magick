@@ -15,26 +15,53 @@ wizardsAdd(WIZARD_NAMES, WIZARD_SURNAMES, WIZARD_COAT_COLORS, WIZARD_EYES_COLORS
 
 setupWindow.querySelector('.setup-similar').classList.remove('hidden');
 
+/**
+ * Gets a random element from an array
+ * @param {array} array - Array to produce a random item.
+ * @return {string} array[] - Returns a random element of the array.
+ */
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * (array.length - 1))];
 }
-
+/**
+ * Gets an array consisting the characteristics of the wizards.
+ * @param {array} names - An array with the names of the wizards.
+ * @param {array} surnames - An array with the names of the wizards.
+ * @param {array} coatColors - An array with the colors of the coat of the wizards.
+ * @param {array} eyesColors - An array with the colors of the eyes of the wizards.
+ * @param {number} number - The number of wizards required in the array.
+ * @return {array} array - Returns an array with the characteristics of the wizards.
+ */
 function generateWizards(names, surnames, coatColors, eyesColors, number) {
   var wizards = new Array(number);
   for (var i = 0; i < number; i++) {
-    wizards[i] = {names: getRandomElement(names), surname: getRandomElement(surnames), coatColors: getRandomElement(coatColors), eyesColors: getRandomElement(eyesColors)};
+    wizards[i] = {name: getRandomElement(names), surname: getRandomElement(surnames), coatColor: getRandomElement(coatColors), eyesColor: getRandomElement(eyesColors)};
   }
   return wizards;
 }
-
+/**
+ *Render wizard.
+ * @param {object} template - The template wizard.
+ * @param {object} wizard - The object with the characteristics of the wizard.
+ * @return {object} wizardVisual - Returns the render wizard.
+ */
 function wizardRender(template, wizard) {
   var wizardVisual = template.cloneNode(true);
-  wizardVisual.querySelector('.setup-similar-label').textContent = getRandomElement(wizard.name) + ' ' + getRandomElement(wizard.surname);
-  wizardVisual.querySelector('#wizard-coat').style.fill = getRandomElement(wizard.coatColors);
-  wizardVisual.querySelector('#wizard-eyes').style.fill = getRandomElement(wizard.eyesColors);
+  wizardVisual.querySelector('.setup-similar-label').textContent = wizard.name + ' ' + wizard.surname;
+  wizardVisual.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardVisual.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
   return wizardVisual;
 }
-
+/**
+ * Adds a card with a render wizard on the page
+ * @param {array} names - An array with the names of the wizards.
+ * @param {array} surnames - An array with the names of the wizards.
+ * @param {array} coatColors - An array with the colors of the coat of the wizards.
+ * @param {array} eyesColors - An array with the colors of the eyes of the wizards.
+ * @param {number} number - The number of wizards required in the array.
+ * @param {array} template - The template wizard.
+ * @param {array} place - Place to add a wizard.
+ */
 function wizardsAdd(names, surnames, coatColors, eyesColors, number, template, place) {
   var wizards = generateWizards(names, surnames, coatColors, eyesColors, number);
   var temp = document.createDocumentFragment();
