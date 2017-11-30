@@ -9,8 +9,6 @@ var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 1
 var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var NUMBER_OF_WIZARDS = 4;
 
-setupWindow.classList.remove('hidden');
-
 wizardsAdd(WIZARD_NAMES, WIZARD_SURNAMES, WIZARD_COAT_COLORS, WIZARD_EYES_COLORS, NUMBER_OF_WIZARDS, wizardTemplate, wizardPlace);
 
 setupWindow.querySelector('.setup-similar').classList.remove('hidden');
@@ -31,7 +29,7 @@ function getRandomElement(array) {
  * @param {array} coatColors - An array with the colors of the coat of the wizards.
  * @param {array} eyesColors - An array with the colors of the eyes of the wizards.
  * @param {number} number - The number of wizards required in the array.
- * @return {array} array - Returns an array with the characteristics of the wizards.
+ * @return {array} wizards - Returns an array with the characteristics of the wizards.
  */
 function generateWizards(names, surnames, coatColors, eyesColors, number) {
   var wizards = new Array(number);
@@ -78,3 +76,45 @@ function wizardsAdd(names, surnames, coatColors, eyesColors, number, template, p
   }
   place.appendChild(temp);
 }
+
+function popupKeypressHandler(element, keypress, method) {
+  element.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === keypress) {
+      method();
+    }
+  });
+}
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+function openPopup(window) {
+  return function () {
+    window.classList.remove('hidden');
+  };
+}
+
+function closePopup(window) {
+  return function () {
+    window.classList.add('hidden');
+  };
+}
+
+function openPopupFull(window) {
+  return function (evt) {
+    popupKeypressHandler(document, ESC_KEYCODE, closePopup(window));
+    if (evt.type === 'click') {
+      openPopup(window)();
+    } else if (evt.type === 'focus') {
+      popupKeypressHandler(evt.currentTarget, ENTER_KEYCODE, openPopup(window));
+    }
+  };
+}
+
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+
+setupOpen.addEventListener('click', openPopupFull(setupWindow));
+setupOpen.querySelector('.setup-open-icon').addEventListener('focus', openPopupFull(setupWindow));
+setupClose.addEventListener('click', closePopup(setupWindow));
+
