@@ -163,9 +163,10 @@ function closePopup() {
   setupWindow.classList.add('hidden');
 }
 /**
- * Event handler for closing a popup.
- * param {object} item -
- * param {array} colors -
+ * Event handler for choosing the color for elements of a wizard.
+ * @param {object} item - A reference to the item wizard.
+ * @param {array} colors - The array of colors of elements of the wizard.
+ * @return {function} - Returns the function changes the color of the item wizard.
  */
 function colorClickHandler(item, colors) {
   return function () {
@@ -173,9 +174,10 @@ function colorClickHandler(item, colors) {
   };
 }
 /**
- * Event handler for closing a popup.
- * param {object} item -
- * param {array} colors -
+ * Event handler for choosing the color for fireball of a wizard.
+ * @param {object} item - A reference to the fireball wizard.
+ * @param {array} colors - The array of colors of fireballs of the wizard.
+ * @return {function} - Returns the function changes the color of the fireball wizard.
  */
 function colorFireballClickHandler(item, colors) {
   return function () {
