@@ -17,12 +17,13 @@ setupWindow.querySelector('.setup-similar').classList.remove('hidden');
 
 /**
  * Gets a random element from an array
- * @param {array} array - Array to produce a random item.
- * @return {string} array[] - Returns a random element of the array.
+ * @param {array} array - Group of elements to produce a random item.
+ * @return {string} - Returns a random element of the array.
  */
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * (array.length - 1))];
 }
+
 /**
  * Gets an array consisting the characteristics of the wizards.
  * @param {array} names - An array with the names of the wizards.
@@ -35,10 +36,16 @@ function getRandomElement(array) {
 function generateWizards(names, surnames, coatColors, eyesColors, number) {
   var wizards = new Array(number);
   for (var i = 0; i < number; i++) {
-    wizards[i] = {name: getRandomElement(names), surname: getRandomElement(surnames), coatColor: getRandomElement(coatColors), eyesColor: getRandomElement(eyesColors)};
+    wizards[i] = {
+      name: getRandomElement(names),
+      surname: getRandomElement(surnames),
+      coatColor: getRandomElement(coatColors),
+      eyesColor: getRandomElement(eyesColors)
+    };
   }
   return wizards;
 }
+
 /**
  *Render wizard.
  * @param {object} template - The template wizard.
@@ -52,6 +59,7 @@ function wizardRender(template, wizard) {
   wizardVisual.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
   return wizardVisual;
 }
+
 /**
  * Adds a card with a render wizard on the page
  * @param {array} names - An array with the names of the wizards.
