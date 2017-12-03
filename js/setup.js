@@ -88,9 +88,9 @@ var colorWizardCoat = setupWindow.querySelector('.wizard-coat');
 var colorWizardEyes = setupWindow.querySelector('.wizard-eyes');
 var colorWizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
 
-setupOpen.addEventListener('click', openPopup);
+setupOpen.addEventListener('click', openPopupClickHandler);
 setupOpenIcon.addEventListener('focus', iconFocusHandler);
-setupClose.addEventListener('click', closePopup);
+setupClose.addEventListener('click', closePopupClickHandler);
 setupClose.addEventListener('focus', closeFocusHandler);
 setupUserName.addEventListener('focus', inputFocusHandler);
 setupUserName.addEventListener('blur', inputFocusHandler);
@@ -103,7 +103,7 @@ colorWizardFireball.addEventListener('click', colorFireballClickHandler(colorWiz
  */
 function popupKeydownEscHandler(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closePopup();
+    closePopupClickHandler();
   }
 }
 /**
@@ -112,7 +112,7 @@ function popupKeydownEscHandler(evt) {
  */
 function popupKeydownEnterHandler(evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    openPopup();
+    openPopupClickHandler();
   }
 }
 /**
@@ -121,13 +121,13 @@ function popupKeydownEnterHandler(evt) {
  */
 function popupKeydownEnterCloseHandler(evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    closePopup();
+    closePopupClickHandler();
   }
 }
 /**
  * Event handler for opening a popup.
  */
-function openPopup() {
+function openPopupClickHandler() {
   setupWindow.classList.remove('hidden');
   document.addEventListener('keydown', popupKeydownEscHandler);
 }
@@ -159,7 +159,7 @@ function inputFocusHandler(evt) {
 /**
  *Event handler for closing a popup.
  */
-function closePopup() {
+function closePopupClickHandler() {
   setupWindow.classList.add('hidden');
 }
 /**
