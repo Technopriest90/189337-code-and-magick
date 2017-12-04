@@ -87,4 +87,88 @@
   function closePopupClickHandler() {
     setupWindow.classList.add('hidden');
   }
+
+  var setupUserPic = setupWindow.querySelector('.upload');
+  var setupUserInput = setupWindow.querySelector('.setup-user-pic + input');
+
+  setupUserPic.addEventListener('mousedown', popupMousedownHandler, true);
+  setupUserInput.addEventListener('click', inputClickHandler);
+
+  function inputClickHandler(evt) {
+    evt.preventDefault();
+  }
+
+  function popupMousedownHandler(evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    document.addEventListener('mousemove', popupMousemoveHandler);
+    document.addEventListener('mouseup', popupMouseupHandler);
+
+
+    function popupMousemoveHandler(moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
+      setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
+    }
+
+    function popupMouseupHandler(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', popupMousemoveHandler);
+      document.removeEventListener('mouseup', popupMouseupHandler);
+    }
+  }
+
+  var setupArtifactsShop = setupWindow.querySelector('.setup-artifacts-shop');
+  var draggedUnit = null;
+
+  setupArtifactsShop.addEventListener('dragstart', function (evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedUnit = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
+    }
+  });
+
+  var setupArtifacts = setupWindow.querySelector('.setup-artifacts');
+  var setupArtifactsCell = setupArtifacts.querySelectorAll('.setup-artifacts-cell');
+
+  for (var i = 0; i < setupArtifactsCell.length; i++) {
+    setupArtifactsCell[i].addEventListener('dragover', cellDragoverHandler, false);
+  }
+
+  function cellDragoverHandler(evt) {
+    evt.preventDefault();
+  }
+
+  setupArtifacts.addEventListener('drop', function (evt) {
+    evt.target.appendChild(draggedUnit.cloneNode(true));
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  });
+  setupArtifacts.addEventListener('dragenter', function (evt) {
+    evt.target.style.outline = '2px dashed red';
+    evt.target.style.backgroundColor = 'yellow';
+    evt.preventDefault();
+  });
+
+  setupArtifacts.addEventListener('dragleave', function (evt) {
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  });
 })();
