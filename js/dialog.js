@@ -10,7 +10,6 @@
   var colorWizardCoat = setupWindow.querySelector('.wizard-coat');
   var colorWizardEyes = setupWindow.querySelector('.wizard-eyes');
   var colorWizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
-  var setupUserPic = setupWindow.querySelector('.upload');
   var setupUserInput = setupWindow.querySelector('.setup-user-pic + input');
   var setupArtifactsShop = setupWindow.querySelector('.setup-artifacts-shop');
   var draggedUnit = null;
@@ -26,7 +25,6 @@
   window.colorize(colorWizardCoat);
   window.colorize(colorWizardEyes);
   window.colorize(colorWizardFireball);
-  moveSetupWindow(setupUserPic, setupUserInput);
   dragAndDrop(setupArtifactsShop, setupArtifacts, setupArtifactsCell);
 
   /**
@@ -101,59 +99,60 @@
    * @param {object} capturePlace - A place to capture the window.
    * @param  {object} input - Input closing the place of capture.
    */
-  function moveSetupWindow(capturePlace, input) {
-    capturePlace.addEventListener('mousedown', popupMousedownHandler, true);
-    input.addEventListener('click', inputClickHandler);
+  setupUserInput.addEventListener('mousedown', popupMousedownHandler, true);
+
+  /**
+   * The event handler disables the default properties from input.
+   * @param {object} evt - event
+   */
+  function inputMouseUpHandler(evt) {
+    evt.preventDefault();
+  }
+
+  /**
+   * Event handler for moving the settings window.
+   * @param {object} evt - event
+   */
+  function popupMousedownHandler(evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    document.addEventListener('mousemove', popupMousemoveHandler);
+    document.addEventListener('mouseup', popupMouseupHandler);
 
     /**
-     * The event handler disables the default properties from input.
-     * @param {object} evt - event
+     * Part of the event handler is responsible for moving.
+     * @param {object} moveEvt - event
      */
-    function inputClickHandler(evt) {
-      evt.preventDefault();
-    }
-    /**
-     * Event handler for moving the settings window.
-     * @param {object} evt - event
-     */
-    function popupMousedownHandler(evt) {
-      evt.preventDefault();
-      var startCoords = {
-        x: evt.clientX,
-        y: evt.clientY
+    function popupMousemoveHandler(moveEvt) {
+      moveEvt.preventDefault();
+      setupUserInput.addEventListener('click', inputMouseUpHandler);
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
       };
-      document.addEventListener('mousemove', popupMousemoveHandler);
-      document.addEventListener('mouseup', popupMouseupHandler);
-      /**
-       * Part of the event handler is responsible for moving.
-       * @param {object} moveEvt - event
-       */
-      function popupMousemoveHandler(moveEvt) {
-        moveEvt.preventDefault();
 
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
-        };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
 
-        startCoords = {
-          x: moveEvt.clientX,
-          y: moveEvt.clientY
-        };
+      setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
+      setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
+    }
 
-        setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
-        setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
-      }
-      /**
-       * Part of the event handler is responsible for stopping the movement.
-       * @param {object} upEvt - event
-       */
-      function popupMouseupHandler(upEvt) {
-        upEvt.preventDefault();
-
-        document.removeEventListener('mousemove', popupMousemoveHandler);
-        document.removeEventListener('mouseup', popupMouseupHandler);
-      }
+    /**
+     * Part of the event handler is responsible for stopping the movement.
+     * @param {object} upEvt - event
+     */
+    function popupMouseupHandler(upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', popupMousemoveHandler);
+      document.removeEventListener('mouseup', popupMouseupHandler);
+      setupUserInput.removeEventListener('click', inputMouseUpHandler);
     }
   }
 
