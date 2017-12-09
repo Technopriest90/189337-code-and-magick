@@ -25,7 +25,12 @@
   window.colorize(colorWizardCoat);
   window.colorize(colorWizardEyes);
   window.colorize(colorWizardFireball);
-  dragAndDrop(setupArtifactsShop, setupArtifacts, setupArtifactsCell);
+  setupUserInput.addEventListener('dragstart', popupDragstartHandler);
+  setupArtifactsShop.addEventListener('dragstart', shopDragStartHandler);
+  addDragoverToCell(setupArtifactsCell);
+  setupArtifacts.addEventListener('drop', artifactsDropHandler);
+  setupArtifacts.addEventListener('dragenter', artifactsDragCenterHandler);
+  setupArtifacts.addEventListener('dragleave', artifactsDragLeaveHandler);
 
   /**
    * The event handler on closing pop-up with the Esc button.
@@ -95,25 +100,10 @@
   }
 
   /**
-   *Adds event handlers which move the settings window.
-   * @param {object} capturePlace - A place to capture the window.
-   * @param  {object} input - Input closing the place of capture.
-   */
-  setupUserInput.addEventListener('mousedown', popupMousedownHandler, true);
-
-  /**
-   * The event handler disables the default properties from input.
-   * @param {object} evt - event
-   */
-  function inputMouseUpHandler(evt) {
-    evt.preventDefault();
-  }
-
-  /**
    * Event handler for moving the settings window.
    * @param {object} evt - event
    */
-  function popupMousedownHandler(evt) {
+  function popupDragstartHandler(evt) {
     evt.preventDefault();
     var startCoords = {
       x: evt.clientX,
@@ -127,9 +117,6 @@
      * @param {object} moveEvt - event
      */
     function popupMousemoveHandler(moveEvt) {
-      moveEvt.preventDefault();
-      setupUserInput.addEventListener('click', inputMouseUpHandler);
-
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -148,58 +135,69 @@
      * Part of the event handler is responsible for stopping the movement.
      * @param {object} upEvt - event
      */
-    function popupMouseupHandler(upEvt) {
-      upEvt.preventDefault();
+    function popupMouseupHandler() {
       document.removeEventListener('mousemove', popupMousemoveHandler);
-      document.removeEventListener('mouseup', popupMouseupHandler);
-      setupUserInput.removeEventListener('click', inputMouseUpHandler);
+    }
+  }
+
+  /**
+   * The event handler is responsible for starting the movement of artifact.
+   * @param {object} evt - event
+   */
+  function shopDragStartHandler(evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedUnit = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
     }
   }
 
   /**
    * Adds transfer items from store to inventory.
-   * @param {object} shop - Shop items.
-   * @param {object} placeToDrop - Inventory.
-   * @param {object} cell - Cell in inventory
+   * @param {object} cell - event
    */
-  function dragAndDrop(shop, placeToDrop, cell) {
-    shop.addEventListener('dragstart', function (evt) {
-      if (evt.target.tagName.toLowerCase() === 'img') {
-        draggedUnit = evt.target;
-        evt.dataTransfer.setData('text/plain', evt.target.alt);
-      }
-    });
-
-
+  function addDragoverToCell(cell) {
     for (var i = 0; i < cell.length; i++) {
       cell[i].addEventListener('dragover', cellDragoverHandler, false);
     }
+  }
 
-    /**
-     * The event handler cancelling the dragover from inventory slot.
-     * @param {object} evt - event
-     */
-    function cellDragoverHandler(evt) {
-      evt.preventDefault();
-    }
+  /**
+   * Adds transfer items from store to inventory.
+   * @param {object} evt - event
+   */
+  function artifactsDropHandler(evt) {
+    evt.target.appendChild(draggedUnit.cloneNode(true));
+    evt.target.removeEventListener('dragover', cellDragoverHandler);
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  }
 
-    placeToDrop.addEventListener('drop', function (evt) {
-      evt.target.appendChild(draggedUnit.cloneNode(true));
-      evt.target.removeEventListener('dragover', cellDragoverHandler);
-      evt.target.style.outline = 'none';
-      evt.target.style.backgroundColor = '';
-      evt.preventDefault();
-    });
-    placeToDrop.addEventListener('dragenter', function (evt) {
-      evt.target.style.outline = '2px dashed red';
-      evt.target.style.backgroundColor = 'yellow';
-      evt.preventDefault();
-    });
+  /**
+   * Adds transfer items from store to inventory.
+   * @param {object} evt - event
+   */
+  function artifactsDragCenterHandler(evt) {
+    evt.target.style.outline = '2px dashed red';
+    evt.target.style.backgroundColor = 'yellow';
+    evt.preventDefault();
+  }
 
-    placeToDrop.addEventListener('dragleave', function (evt) {
-      evt.target.style.outline = 'none';
-      evt.target.style.backgroundColor = '';
-      evt.preventDefault();
-    });
+  /**
+   * Adds transfer items from store to inventory.
+   * @param {object} evt - event
+   */
+  function artifactsDragLeaveHandler(evt) {
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  }
+
+  /**
+   * The event handler cancelling the dragover from inventory slot.
+   * @param {object} evt - event
+   */
+  function cellDragoverHandler(evt) {
+    evt.preventDefault();
   }
 })();
