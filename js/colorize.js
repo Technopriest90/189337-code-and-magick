@@ -7,7 +7,7 @@
    */
   window.colorize = function (item) {
     item.addEventListener('click', function () {
-      if (item.tagName.toLowerCase() === 'div') {
+      if (item.classList.contains('setup-fireball-wrap')) {
         item.style.backgroundColor = window.util.getRandomElement(window.constants.WIZARD_FIREBALL_COLORS);
       } else if (item.classList.contains('wizard-coat')) {
         item.style.fill = window.util.getRandomElement(window.constants.WIZARD_COAT_COLORS);

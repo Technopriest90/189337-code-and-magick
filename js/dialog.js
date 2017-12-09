@@ -10,7 +10,6 @@
   var colorWizardCoat = setupWindow.querySelector('.wizard-coat');
   var colorWizardEyes = setupWindow.querySelector('.wizard-eyes');
   var colorWizardFireball = setupWindow.querySelector('.setup-fireball-wrap');
-  var setupUserPic = setupWindow.querySelector('.upload');
   var setupUserInput = setupWindow.querySelector('.setup-user-pic + input');
   var setupArtifactsShop = setupWindow.querySelector('.setup-artifacts-shop');
   var draggedUnit = null;
@@ -26,8 +25,12 @@
   window.colorize(colorWizardCoat);
   window.colorize(colorWizardEyes);
   window.colorize(colorWizardFireball);
-  moveSetupWindow(setupUserPic, setupUserInput);
-  dragAndDrop(setupArtifactsShop, setupArtifacts, setupArtifactsCell);
+  setupUserInput.addEventListener('dragstart', popupDragstartHandler);
+  setupArtifactsShop.addEventListener('dragstart', shopDragStartHandler);
+  addDragoverToCell(setupArtifactsCell);
+  setupArtifacts.addEventListener('drop', artifactsDropHandler);
+  setupArtifacts.addEventListener('dragenter', artifactsDragCenterHandler);
+  setupArtifacts.addEventListener('dragleave', artifactsDragLeaveHandler);
 
   /**
    * The event handler on closing pop-up with the Esc button.
@@ -97,110 +100,103 @@
   }
 
   /**
-   *Adds event handlers which move the settings window.
-   * @param {object} capturePlace - A place to capture the window.
-   * @param  {object} input - Input closing the place of capture.
+   * Event handler for moving the settings window.
+   * @param {object} evt - event
    */
-  function moveSetupWindow(capturePlace, input) {
-    capturePlace.addEventListener('mousedown', popupMousedownHandler, true);
-    input.addEventListener('click', inputClickHandler);
+  function popupDragstartHandler(evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    document.addEventListener('mousemove', popupMousemoveHandler);
+    document.addEventListener('mouseup', popupMouseupHandler);
 
     /**
-     * The event handler disables the default properties from input.
-     * @param {object} evt - event
+     * Part of the event handler is responsible for moving.
+     * @param {object} moveEvt - event
      */
-    function inputClickHandler(evt) {
-      evt.preventDefault();
-    }
-    /**
-     * Event handler for moving the settings window.
-     * @param {object} evt - event
-     */
-    function popupMousedownHandler(evt) {
-      evt.preventDefault();
-      var startCoords = {
-        x: evt.clientX,
-        y: evt.clientY
+    function popupMousemoveHandler(moveEvt) {
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
       };
-      document.addEventListener('mousemove', popupMousemoveHandler);
-      document.addEventListener('mouseup', popupMouseupHandler);
-      /**
-       * Part of the event handler is responsible for moving.
-       * @param {object} moveEvt - event
-       */
-      function popupMousemoveHandler(moveEvt) {
-        moveEvt.preventDefault();
 
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
-        };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
 
-        startCoords = {
-          x: moveEvt.clientX,
-          y: moveEvt.clientY
-        };
+      setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
+      setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
+    }
 
-        setupWindow.style.top = (setupWindow.offsetTop - shift.y) + 'px';
-        setupWindow.style.left = (setupWindow.offsetLeft - shift.x) + 'px';
-      }
-      /**
-       * Part of the event handler is responsible for stopping the movement.
-       * @param {object} upEvt - event
-       */
-      function popupMouseupHandler(upEvt) {
-        upEvt.preventDefault();
-
-        document.removeEventListener('mousemove', popupMousemoveHandler);
-        document.removeEventListener('mouseup', popupMouseupHandler);
-      }
+    /**
+     * Part of the event handler is responsible for stopping the movement.
+     */
+    function popupMouseupHandler() {
+      document.removeEventListener('mousemove', popupMousemoveHandler);
     }
   }
 
   /**
-   * Adds transfer items from store to inventory.
-   * @param {object} shop - Shop items.
-   * @param {object} placeToDrop - Inventory.
-   * @param {object} cell - Cell in inventory
+   * The event handler is responsible for starting the movement of artifact.
+   * @param {object} evt - event
    */
-  function dragAndDrop(shop, placeToDrop, cell) {
-    shop.addEventListener('dragstart', function (evt) {
-      if (evt.target.tagName.toLowerCase() === 'img') {
-        draggedUnit = evt.target;
-        evt.dataTransfer.setData('text/plain', evt.target.alt);
-      }
-    });
+  function shopDragStartHandler(evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedUnit = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
+    }
+  }
 
-
+  /**
+   * Adds an event handler dragover to the  inventory slots.
+   * @param {object} cell - the inventory slots.
+   */
+  function addDragoverToCell(cell) {
     for (var i = 0; i < cell.length; i++) {
       cell[i].addEventListener('dragover', cellDragoverHandler, false);
     }
+  }
 
-    /**
-     * The event handler cancelling the dragover from inventory slot.
-     * @param {object} evt - event
-     */
-    function cellDragoverHandler(evt) {
-      evt.preventDefault();
-    }
+  /**
+   * Adds drop artifact in the cell inventory
+   * @param {object} evt - event
+   */
+  function artifactsDropHandler(evt) {
+    evt.target.appendChild(draggedUnit.cloneNode(true));
+    evt.target.removeEventListener('dragover', cellDragoverHandler);
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  }
 
-    placeToDrop.addEventListener('drop', function (evt) {
-      evt.target.appendChild(draggedUnit.cloneNode(true));
-      evt.target.removeEventListener('dragover', cellDragoverHandler);
-      evt.target.style.outline = 'none';
-      evt.target.style.backgroundColor = '';
-      evt.preventDefault();
-    });
-    placeToDrop.addEventListener('dragenter', function (evt) {
-      evt.target.style.outline = '2px dashed red';
-      evt.target.style.backgroundColor = 'yellow';
-      evt.preventDefault();
-    });
+  /**
+   * Adds a backlight to the inventory slot when you transfer artifact.
+   * @param {object} evt - event
+   */
+  function artifactsDragCenterHandler(evt) {
+    evt.target.style.outline = '2px dashed red';
+    evt.target.style.backgroundColor = 'yellow';
+    evt.preventDefault();
+  }
 
-    placeToDrop.addEventListener('dragleave', function (evt) {
-      evt.target.style.outline = 'none';
-      evt.target.style.backgroundColor = '';
-      evt.preventDefault();
-    });
+  /**
+   * Adds a backlight to the inventory slot when you transfer artifact.
+   * @param {object} evt - event
+   */
+  function artifactsDragLeaveHandler(evt) {
+    evt.target.style.outline = 'none';
+    evt.target.style.backgroundColor = '';
+    evt.preventDefault();
+  }
+
+  /**
+   * The event handler prohibiting movement into the cell.
+   * @param {object} evt - event
+   */
+  function cellDragoverHandler(evt) {
+    evt.preventDefault();
   }
 })();
