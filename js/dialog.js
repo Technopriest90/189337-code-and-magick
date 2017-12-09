@@ -133,7 +133,6 @@
 
     /**
      * Part of the event handler is responsible for stopping the movement.
-     * @param {object} upEvt - event
      */
     function popupMouseupHandler() {
       document.removeEventListener('mousemove', popupMousemoveHandler);
@@ -152,8 +151,8 @@
   }
 
   /**
-   * Adds transfer items from store to inventory.
-   * @param {object} cell - event
+   * Adds an event handler dragover to the  inventory slots.
+   * @param {object} cell - the inventory slots.
    */
   function addDragoverToCell(cell) {
     for (var i = 0; i < cell.length; i++) {
@@ -162,7 +161,7 @@
   }
 
   /**
-   * Adds transfer items from store to inventory.
+   * Adds drop artifact in the cell inventory
    * @param {object} evt - event
    */
   function artifactsDropHandler(evt) {
@@ -174,7 +173,7 @@
   }
 
   /**
-   * Adds transfer items from store to inventory.
+   * Adds a backlight to the inventory slot when you transfer artifact.
    * @param {object} evt - event
    */
   function artifactsDragCenterHandler(evt) {
@@ -184,7 +183,7 @@
   }
 
   /**
-   * Adds transfer items from store to inventory.
+   * Adds a backlight to the inventory slot when you transfer artifact.
    * @param {object} evt - event
    */
   function artifactsDragLeaveHandler(evt) {
@@ -194,7 +193,7 @@
   }
 
   /**
-   * The event handler cancelling the dragover from inventory slot.
+   * The event handler prohibiting movement into the cell.
    * @param {object} evt - event
    */
   function cellDragoverHandler(evt) {

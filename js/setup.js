@@ -9,15 +9,6 @@
   setupWindow.querySelector('.setup-similar').classList.remove('hidden');
 
   /**
-   * Gets a random element from an array
-   * @param {array} array - Group of elements to produce a random item.
-   * @return {string} - Returns a random element of the array.
-   */
-  function getRandomElement(array) {
-    return array[Math.floor(Math.random() * (array.length - 1))];
-  }
-
-  /**
    * Gets an array consisting the characteristics of the wizards.
    * @param {array} names - An array with the names of the wizards.
    * @param {array} surnames - An array with the names of the wizards.
@@ -30,10 +21,10 @@
     var wizards = new Array(number);
     for (var i = 0; i < number; i++) {
       wizards[i] = {
-        name: getRandomElement(names),
-        surname: getRandomElement(surnames),
-        coatColor: getRandomElement(coatColors),
-        eyesColor: getRandomElement(eyesColors)
+        name: window.util.getRandomElement(names),
+        surname: window.util.getRandomElement(surnames),
+        coatColor: window.util.getRandomElement(coatColors),
+        eyesColor: window.util.getRandomElement(eyesColors)
       };
     }
     return wizards;
