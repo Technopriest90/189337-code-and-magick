@@ -22,9 +22,9 @@
   setupClose.addEventListener('focus', closeFocusHandler);
   setupUserName.addEventListener('focus', inputFocusHandler);
   setupUserName.addEventListener('blur', inputFocusHandler);
-  window.colorize(colorWizardCoat);
-  window.colorize(colorWizardEyes);
-  window.colorize(colorWizardFireball);
+  window.color.colorizeElement(colorWizardCoat, window.constants.WIZARD_COAT_COLORS, window.color.fillElement);
+  window.color.colorizeElement(colorWizardEyes, window.constants.WIZARD_EYES_COLORS, window.color.fillElement);
+  window.color.colorizeElement(colorWizardFireball, window.constants.WIZARD_FIREBALL_COLORS, window.color.changeElementBackground);
   setupUserInput.addEventListener('dragstart', popupDragstartHandler);
   setupArtifactsShop.addEventListener('dragstart', shopDragStartHandler);
   addDragoverToCell(setupArtifactsCell);
