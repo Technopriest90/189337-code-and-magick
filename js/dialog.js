@@ -15,6 +15,7 @@
   var draggedUnit = null;
   var setupArtifacts = setupWindow.querySelector('.setup-artifacts');
   var setupArtifactsCell = setupArtifacts.querySelectorAll('.setup-artifacts-cell');
+  var form = document.querySelector('.setup-wizard-form');
 
   setupOpen.addEventListener('click', openPopupClickHandler);
   setupOpenIcon.addEventListener('focus', iconFocusHandler);
@@ -31,6 +32,7 @@
   setupArtifacts.addEventListener('drop', artifactsDropHandler);
   setupArtifacts.addEventListener('dragenter', artifactsDragCenterHandler);
   setupArtifacts.addEventListener('dragleave', artifactsDragLeaveHandler);
+  form.addEventListener('submit', formSubmitHandler);
 
   /**
    * The event handler on closing pop-up with the Esc button.
@@ -197,6 +199,13 @@
    * @param {object} evt - event
    */
   function cellDragoverHandler(evt) {
+    evt.preventDefault();
+  }
+
+  function formSubmitHandler(evt) {
+    window.backend.save(new FormData(form), function () {
+      setupWindow.classList.add('hidden');
+    });
     evt.preventDefault();
   }
 })();
