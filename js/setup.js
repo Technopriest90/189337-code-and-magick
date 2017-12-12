@@ -4,9 +4,7 @@
   var wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var wizardPlace = document.querySelector('.setup-similar-list');
 
-  window.backend.load(wizardsAdd);
-
-
+  window.wizardsAdd = wizardsAdd;
   /*  /!**
      * Gets an array consisting the characteristics of the wizards.
      * @param {array} names - An array with the names of the wizards.
@@ -44,14 +42,8 @@
   }
 
   /**
-   * Adds a card with a render wizard on the page
-   * @param {array} names - An array with the names of the wizards.
-   * @param {array} surnames - An array with the names of the wizards.
-   * @param {array} coatColors - An array with the colors of the coat of the wizards.
-   * @param {array} eyesColors - An array with the colors of the eyes of the wizards.
-   * @param {number} number - The number of wizards required in the array.
-   * @param {array} template - The template wizard.
-   * @param {array} place - Place to add a wizard.
+   * Adds a cards with a render wizards on the page
+   * @param {array} wizards - An array with the names of the wizards.
    */
   function wizardsAdd(wizards) {
     var temp = document.createDocumentFragment();

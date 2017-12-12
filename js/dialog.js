@@ -63,6 +63,9 @@
    */
   function openPopupClickHandler() {
     setupWindow.classList.remove('hidden');
+    window.backend.load(window.wizardsAdd, window.backend.errorHandler);
+    // JSONP test
+    // window.jsonp.loader();
     document.addEventListener('keydown', popupKeydownEscHandler);
   }
 
@@ -205,7 +208,7 @@
   function formSubmitHandler(evt) {
     window.backend.save(new FormData(form), function () {
       setupWindow.classList.add('hidden');
-    });
+    }, window.backend.errorHandler);
     evt.preventDefault();
   }
 })();
