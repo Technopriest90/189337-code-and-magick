@@ -2,66 +2,29 @@
 
 (function () {
   window.backend = {
+
     /**
-     * Loads the data of the wizards from the server.
-     * @param {function} onLoad - The function of data processing.
-     * @param {function} onError - The error handling function.
+     * To obtain data on rental units.
+     * @param {function} onLoad - A function running after data load.
+     * @param {function} onError - A function running on error.
      */
     load: function (onLoad, onError) {
-      var URL = 'https://1510.dump.academy/code-and-magick/data';
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
+      var xhr = setupXhr(onLoad, onError);
 
-      xhr.addEventListener('load', function () {
-        if (xhr.response !== null) {
-          onLoad(xhr.response);
-        } else {
-          onError('Произошла ошибка соединения');
-        }
-      });
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Извините, волшебники не успели подгрузиться за ' + xhr.timeout + 'мс');
-      });
-
-      xhr.timeout = 1000;
-
-      xhr.open('GET', URL);
+      xhr.open('GET', window.constants.SERVER_URL_GET);
       xhr.send();
     },
+
     /**
-     * Saves the data of the wizards on the server.
-     * @param {object} data - Information about wizards to send.
-     * @param {function} onLoad - The function of data processing.
-     * @param {function} onError - The error handling function.
+     * Sends data from the form.
+     * @param {object} data - Data from the form
+     * @param {function} onLoad - A function running after data load.
+     * @param {function} onError - A function running on error.
      */
     save: function (data, onLoad, onError) {
-      var URL = 'https://1510.dump.academy/code-and-magick';
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
+      var xhr = setupXhr(onLoad, onError);
 
-      xhr.addEventListener('load', function () {
-        if (xhr.response !== null) {
-          onLoad(xhr.response);
-        } else {
-          onError('Произошла ошибка соединения');
-        }
-      });
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-
-      xhr.timeout = 1000;
-      xhr.open('POST', URL);
+      xhr.open('POST', window.constants.SERVER_URL_POST);
       xhr.send(data);
     },
 
@@ -75,23 +38,35 @@
     }
   };
 
-// JSONP test
+  /**
+   * Configures the XML http request.
+   * @param {function} onLoad - A function running after data load.
+   * @param {function} onError - A function running on error.
+   * @return {object} xhr - Return XML http request;
+   */
+  function setupXhr(onLoad, onError) {
 
-  /* window.jsonp = {
-    DATA_URL: '//js.dump.academy/code-and-magick/data',
-    loader: function () {
-      var loader = document.createElement('script');
-      loader.src = this.DATA_URL + '?callback=__jsonpCallback';
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
 
-      loader.addEventListener('error', function () {
-        document.body.textContent = 'Произошла ошибка при загрузке данных';
-      });
-      document.body.append(loader);
-    }
-  };
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
 
-  window['__jsonpCallback'] = function (data) {
-    window.wizardsAdd(data);
-  };*/
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
 
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс');
+    });
+
+    xhr.timeout = 1000;
+
+    return xhr;
+  }
 })();
