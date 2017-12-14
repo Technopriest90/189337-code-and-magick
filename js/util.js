@@ -29,6 +29,28 @@
      */
     getRandomElement: function (array) {
       return array[Math.floor(Math.random() * (array.length - 1))];
+    },
+    /**
+     * Removes all children of parent in DOM.
+     * @param {object} place - Parent in DOM.
+     */
+    clearChildren: function (place) {
+      while (place.children.length !== 0) {
+        place.children[0].remove();
+      }
+    },
+
+    lastTimeout: null,
+
+    /**
+     * Eliminates extra clicks for elements of the wizard.
+     * @param {function} action - Event on change of element wizard.
+     */
+    debounce: function (action) {
+      if (window.util.lastTimeout) {
+        window.clearTimeout(window.util.lastTimeout);
+      }
+      window.util.lastTimeout = window.setTimeout(action, window.constants.DEBOUNCE_INTERVAL);
     }
   };
 })();

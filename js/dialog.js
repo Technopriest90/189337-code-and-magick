@@ -63,9 +63,7 @@
    */
   function openPopupClickHandler() {
     setupWindow.classList.remove('hidden');
-    window.backend.load(window.wizardsAdd, window.backend.errorHandler);
-    // JSONP test
-    // window.jsonp.loader();
+    window.backend.load(window.backend.loadHandler, window.backend.errorHandler);
     document.addEventListener('keydown', popupKeydownEscHandler);
   }
 

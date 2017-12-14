@@ -19,7 +19,14 @@
      */
     fillElement: function (element, color) {
       return function () {
-        element.style.fill = window.util.getRandomElement(color);
+        var temp = window.util.getRandomElement(color);
+        element.style.fill = temp;
+        if (element.classList.contains('wizard-coat')) {
+          window.wizard.colorCoat = temp;
+        } else {
+          window.wizard.colorEyes = temp;
+        }
+        window.util.debounce(window.wizard.updateWIzards);
       };
     },
     /**

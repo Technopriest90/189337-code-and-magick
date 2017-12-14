@@ -27,7 +27,16 @@
       xhr.open('POST', window.constants.SERVER_URL_POST);
       xhr.send(data);
     },
-    
+
+    /**
+     * The load handler.
+     * @param {string} wizards - Data wizards.
+     */
+    loadHandler: function (wizards) {
+      window.wizard.data = wizards;
+      window.wizardsAdd(wizards);
+    },
+
     /**
      * The error handler.
      * @param {string} errorMessage - The error information.
