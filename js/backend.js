@@ -28,6 +28,19 @@
       xhr.send(data);
     },
 
+    /**
+     * The load handler.
+     * @param {string} wizards - Data wizards.
+     */
+    loadHandler: function (wizards) {
+      window.wizard.data = wizards;
+      window.wizardsAdd(wizards);
+    },
+
+    /**
+     * The error handler.
+     * @param {string} errorMessage - The error information.
+     */
     errorHandler: function (errorMessage) {
       var errorWindow = document.querySelector('.setup-similar');
       errorWindow.classList.remove('hidden');

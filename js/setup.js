@@ -5,6 +5,7 @@
   var wizardPlace = document.querySelector('.setup-similar-list');
 
   window.wizardsAdd = wizardsAdd;
+
   /*  /!**
      * Gets an array consisting the characteristics of the wizards.
      * @param {array} names - An array with the names of the wizards.
@@ -46,9 +47,10 @@
    * @param {array} wizards - An array with the names of the wizards.
    */
   function wizardsAdd(wizards) {
+    window.util.clearChildren(wizardPlace);
     var temp = document.createDocumentFragment();
     for (var i = 0; i < 4; i++) {
-      temp.append(wizardRender(wizardTemplate, window.util.getRandomElement(wizards)));
+      temp.append(wizardRender(wizardTemplate, wizards[i]));
     }
     wizardPlace.appendChild(temp);
     setupWindow.querySelector('.setup-similar').classList.remove('hidden');
