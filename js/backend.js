@@ -27,7 +27,11 @@
       xhr.open('POST', window.constants.SERVER_URL_POST);
       xhr.send(data);
     },
-
+    
+    /**
+     * The error handler.
+     * @param {string} errorMessage - The error information.
+     */
     errorHandler: function (errorMessage) {
       var errorWindow = document.querySelector('.setup-similar');
       errorWindow.classList.remove('hidden');
