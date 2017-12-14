@@ -94,14 +94,12 @@
       document.addEventListener('keydown', popupKeydownEscHandler);
     }
   }
-
   /**
    *Event handler for closing a popup.
    */
   function closePopupClickHandler() {
     setupWindow.classList.add('hidden');
   }
-
   /**
    * Event handler for moving the settings window.
    * @param {object} evt - event
@@ -114,7 +112,6 @@
     };
     document.addEventListener('mousemove', popupMousemoveHandler);
     document.addEventListener('mouseup', popupMouseupHandler);
-
     /**
      * Part of the event handler is responsible for moving.
      * @param {object} moveEvt - event
