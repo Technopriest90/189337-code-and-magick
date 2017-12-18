@@ -49,7 +49,7 @@
   function wizardsAdd(wizards) {
     window.util.clearChildren(wizardPlace);
     var temp = document.createDocumentFragment();
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < window.constants.NUMBER_OF_WIZARDS; i++) {
       temp.append(wizardRender(wizardTemplate, wizards[i]));
     }
     wizardPlace.appendChild(temp);

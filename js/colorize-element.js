@@ -26,7 +26,7 @@
         } else {
           window.wizard.colorEyes = temp;
         }
-        window.util.debounce(window.wizard.updateWIzards);
+        window.util.debounce(window.wizard.updateWizards);
       };
     },
     /**

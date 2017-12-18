@@ -28,6 +28,7 @@
   window.color.colorizeElement(colorWizardFireball, window.constants.WIZARD_FIREBALL_COLORS, window.color.changeElementBackground);
   setupUserInput.addEventListener('dragstart', popupDragstartHandler);
   setupArtifactsShop.addEventListener('dragstart', shopDragStartHandler);
+  setupArtifacts.addEventListener('dragstart', shopDragStartHandler);
   addDragoverToCell(setupArtifactsCell);
   setupArtifacts.addEventListener('drop', artifactsDropHandler);
   setupArtifacts.addEventListener('dragenter', artifactsDragCenterHandler);
@@ -94,12 +95,14 @@
       document.addEventListener('keydown', popupKeydownEscHandler);
     }
   }
+
   /**
    *Event handler for closing a popup.
    */
   function closePopupClickHandler() {
     setupWindow.classList.add('hidden');
   }
+
   /**
    * Event handler for moving the settings window.
    * @param {object} evt - event
@@ -112,6 +115,7 @@
     };
     document.addEventListener('mousemove', popupMousemoveHandler);
     document.addEventListener('mouseup', popupMouseupHandler);
+
     /**
      * Part of the event handler is responsible for moving.
      * @param {object} moveEvt - event
@@ -147,6 +151,9 @@
     if (evt.target.tagName.toLowerCase() === 'img') {
       draggedUnit = evt.target;
       evt.dataTransfer.setData('text/plain', evt.target.alt);
+      if (evt.target.parentNode.parentNode.classList.contains('setup-artifacts')) {
+        evt.target.parentNode.addEventListener('dragover', cellDragoverHandler, false);
+      }
     }
   }
 
@@ -165,7 +172,11 @@
    * @param {object} evt - event
    */
   function artifactsDropHandler(evt) {
-    evt.target.appendChild(draggedUnit.cloneNode(true));
+    if (draggedUnit.parentNode.parentNode.classList.contains('setup-artifacts')) {
+      evt.target.appendChild(draggedUnit);
+    } else {
+      evt.target.appendChild(draggedUnit.cloneNode(true));
+    }
     evt.target.removeEventListener('dragover', cellDragoverHandler);
     evt.target.style.outline = 'none';
     evt.target.style.backgroundColor = '';
@@ -177,9 +188,11 @@
    * @param {object} evt - event
    */
   function artifactsDragCenterHandler(evt) {
-    evt.target.style.outline = '2px dashed red';
-    evt.target.style.backgroundColor = 'yellow';
-    evt.preventDefault();
+    if (!evt.target.querySelector('img') && (evt.target.tagName.toLowerCase() !== 'img')) {
+      evt.target.style.outline = '2px dashed red';
+      evt.target.style.backgroundColor = 'yellow';
+      evt.preventDefault();
+    }
   }
 
   /**
