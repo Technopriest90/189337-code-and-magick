@@ -12,6 +12,7 @@
     NUMBER_OF_WIZARDS: 4,
     SERVER_URL_GET: 'https://1510.dump.academy/code-and-magick/data',
     SERVER_URL_POST: 'https://1510.dump.academy/code-and-magick',
-    DEBOUNCE_INTERVAL: 300
+    DEBOUNCE_INTERVAL: 300,
+    FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png']
   };
 })();
